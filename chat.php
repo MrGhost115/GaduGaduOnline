@@ -1,3 +1,52 @@
+<?php
+	session_start();
+	
+	$_SESSION['ID_CONV']=1;
+	
+	if($_SESSION['logged']==1){
+		require_once 'db_connect.php';
+		$conn = new mysqli($dbServername, $dbUsername, $dbPassword, $dbName);
+		
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
+		}
+		
+		$sql = 'SELECT users.Nick, users.OnlineStatus FROM participants 
+		LEFT JOIN users ON participants.ID_User=users.ID
+		LEFT JOIN conversations ON participants.ID_Conversation=conversations.ID
+		WHERE participants.ID_Conversation='.$_SESSION['ID_CONV'].' 
+		AND users.Nick!="'.$_SESSION['nick'].'"';
+		$result = $conn->query($sql);
+		$row = $result->fetch_assoc();
+		$NickFriend = $row['Nick'];
+		$OnlineStatus = $row['OnlineStatus'];
+		
+	}else{
+		header("Location: index.php");
+		die();
+	}
+?>
+<?php //wstawic do wypisania nicku rozmowcy
+	echo $NickFriend;
+?>
+<?php //wstawic do wypisania statusu rozmowcy
+	echo $OnlineStatus; // 1 -  Online, 0 - Offline
+?>
+<?php //wstawic do wypisania wiadomosci
+	$sql = 'SELECT messages.Text, messages.TimeSend, users.Nick FROM messages 
+			INNER JOIN users ON messages.ID_Sender=users.ID
+			WHERE messages.ID_Conversation='.$_SESSION['ID_CONV'].'
+			ORDER BY messages.ID DESC LIMIT 50';
+	$result = $conn->query($sql);
+	$amount = @$result->num_rows;
+	$conn->close();
+	
+	if($result && $amount>0){
+		while($row = $result->fetch_assoc()){
+			echo $row['TimeSend'].' '.$row['Nick'].' '.$row['Text'].'<br />'; //Time, Nick, Message, I used space to separate values
+		}
+	}else echo 'Error';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
