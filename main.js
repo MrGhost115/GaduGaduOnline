@@ -32,10 +32,10 @@ function getMessage() {
                 this.responseText;
         }
     };
-    xhttp.open("GET", "send.php/?message=".input.value, true);
+    xhttp.open("GET", "send.php/?message="+inputChat.value, true);
     xhttp.send();
 }
-setInterval(getMessage, 1000)
+//setInterval(getMessage, 1000)
 
 btnChat.addEventListener('click', send)
 btnChat.addEventListener('click', loadDoc)

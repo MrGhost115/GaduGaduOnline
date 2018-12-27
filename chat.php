@@ -93,7 +93,7 @@
                 </div> <!-- messages -->
                 <div class="two__bot">
                     <input class="two__bot--write" type="text" placeholder="Write message ..."> <!-- write -->
-                    <button class="two__bot--send" >Send</button> <!-- send -->
+                    <button class="two__bot--send" onclick="getMessage();" >Send</button> <!-- send -->
                 </div>
 
             </div>
