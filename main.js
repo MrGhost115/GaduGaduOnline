@@ -38,3 +38,4 @@ function getMessage() {
 setInterval(getMessage, 1000)
 
 btnChat.addEventListener('click', send)
+btnChat.addEventListener('click', loadDoc)
