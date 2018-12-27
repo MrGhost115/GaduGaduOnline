@@ -12,8 +12,11 @@
 		$sql = 'SELECT Password FROM users where Nick="'.$name.'"';
 		$result = $conn->query($sql);
 		if(($result->num_rows)>0){
-			$row = $result->fetch_assoc();
-			if(1){			//password_verify($pass,$row['Password']) dac jak bedzie rejestracja
+			$row = $result->fetch_assoc();	
+			$password2 = $row['Password'];
+			
+			
+			if(password_verify($pass, $password2)){
 				$_SESSION['logged'] = 1;
 				$_SESSION['nick'] = $name;
 				
@@ -22,8 +25,8 @@
 				$row = $result->fetch_assoc();
 				$_SESSION['ID_USER'] = $row['ID'];
 				
-				$sql = 'UPDATE users SET StatusOnline = 0 WHERE users.ID = '.$_SESSION['ID_USER'];
-				$result = $conn->query($sql);
+				$sql = 'UPDATE users SET OnlineStatus = 1 WHERE users.ID = '.$_SESSION['ID_USER'];
+				$conn->query($sql);
 				$conn->close();
 				
 				header('Location: chat.php');
