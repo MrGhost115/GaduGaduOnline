@@ -1,5 +1,5 @@
-const inputChat = document.querySelector('.chat__text')
-const btnChat = document.querySelector('.send')
+const inputChat = document.querySelector('.two__bot--write')
+const btnChat = document.querySelector('.two__bot--send')
 
 const send = (e) => {
     const inputValue = inputChat.value
@@ -23,6 +23,18 @@ function loadDoc() {
     xhttp.send();
 }
 
-
+function getMessage() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            //document.getElementById("demo").innerHTML =     
+            inputChat.value =
+                this.responseText;
+        }
+    };
+    xhttp.open("GET", "send.php/?message=".input.value, true);
+    xhttp.send();
+}
+setInterval(getMessage, 1000)
 
 btnChat.addEventListener('click', send)
