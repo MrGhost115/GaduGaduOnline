@@ -92,6 +92,8 @@
 
  }
 
+
+
  .two__top {
      height: 50px;
      width: 100%;
@@ -108,6 +110,42 @@
      border-left: 1px solid #a7afb6;
      height: calc(100% - 50px);
      width: 100%;
+ }
+
+ .two__mid--status {
+     display: flex;
+     position: absolute;
+     width: 100%;
+     height: 60px;
+     border-bottom: 1px solid #a7afb6;
+ }
+
+ .user--name {
+     width: 50%;
+     height: 100%;
+     color: red;
+
+ }
+
+ .user--status {
+     width: 50%;
+     height: 100%;
+     color: green;
+
+
+ }
+
+ .two__mid--messages--space {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     border: 1px solid #a7afb6;
+     border-radius: 10px;
+     width: 90%;
+     height: 65%;
+     background-color: #cbccd1;
+
  }
 
  .two__bot {
