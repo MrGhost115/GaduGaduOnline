@@ -104,7 +104,7 @@
                     <div class="two__mid--messages--space">
 					<?php //wstawic do wypisania wiadomosci
 	if($_SESSION['ID_CONV']!=0){
-		$sql = 'SELECT messages.Text, messages.TimeSend, users.Nick FROM messages 
+		$sql = 'SELECT messages.ID, messages.Text, messages.TimeSend, users.Nick FROM messages 
 				INNER JOIN users ON messages.ID_Sender=users.ID
 				WHERE messages.ID_Conversation='.$_SESSION['ID_CONV'].'
 				ORDER BY messages.ID ASC';
@@ -114,7 +114,8 @@
 		
 		if($result && $amount>0){
 			while($row = $result->fetch_assoc()){
-				echo '<div>'.$row['TimeSend'].' '.$row['Nick'].' '.$row['Text'].'</div>'; //Time, Nick, Message, I used space to separate values
+				echo (($row['Nick']==$_SESSION['nick'])?'<div class="rightboy">':'<div class="leftboy">').$row['TimeSend'].' '.$row['Nick'].' '.$row['Text'].'</div>'; //Time, Nick, Message, I used space to separate values
+				$_SESSION['lastMsgID'] = $row['ID'];
 			}
 		}else echo 'Error';
 	}

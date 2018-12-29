@@ -8,17 +8,17 @@
 			die("0");
 		}
 		
-		$sql = 'SELECT messages.Text, messages.TimeSend, users.Nick FROM messages 
-		INNER JOIN users ON messages.ID_Sender=users.ID
+		$sql = 'SELECT messages.ID, messages.Text, messages.TimeSend, users.Nick FROM messages 
+		LEFT JOIN users ON messages.ID_Sender=users.ID
 		WHERE messages.ID_Conversation='.$_SESSION['ID_CONV'].'
-		AND messages.ID>'.$_SESSION['lastMsgID'].'AND messages.ID_Sender!="'.$_SESSION['ID_USER'].'"';
+		AND (messages.ID > '.$_SESSION['lastMsgID'].') AND messages.ID_Sender!='.$_SESSION['ID_USER'].'';
 		$result = $conn->query($sql);
 		$amount = @$result->num_rows;
 		$conn->close();
-		
-		if($result==1 && $amount>0){
+		if($amount>0){
 			while($row = $result->fetch_assoc()){
-				echo $row['TimeSend'].' '.$row['Nick'].' '.$row['Text'].'<br />'; //Time, Nick, Message, I used space to separate values
+				echo '<div class="leftboy">'.$row['TimeSend'].' '.$row['Nick'].' '.$row['Text'].'</div>'; //Time, Nick, Message, I used space to separate values
+				$_SESSION['lastMsgID'] = $row['ID'];
 			}
 		}else die("0");
 	}else die("0");
