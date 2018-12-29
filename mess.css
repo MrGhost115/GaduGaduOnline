@@ -250,14 +250,7 @@
      border: none;
  }
 
- .newdiv {
-     position: absolute;
-     top: 50%;
-     left: 50%;
-     transform: translate(-50%, -50%);
-     background-color: green;
-     z-index: 2;
- }
+
 
  .logout {
      position: absolute;
@@ -265,4 +258,17 @@
      right: 100px;
      color: red;
      background-color: green;
+ }
+
+ .leftboy {
+     color: red;
+     width: 100%;
+ }
+
+
+ .rightboy {
+     color: blue;
+     width: 100%;
+     text-align: right;
+
  }

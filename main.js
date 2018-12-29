@@ -47,7 +47,7 @@ btnChat.addEventListener('click', send)
 function append() {
     const div = document.createElement('div')
     messSpace.appendChild(div).style.color = 'red'
-    div.classList.add('newdiv')
+    div.classList.add('rightboy')
     div.innerHTML = inputChat.value
     // console.log(div)
 
@@ -72,3 +72,5 @@ function recieveMessage() {
 
 
 }
+
+//substr

@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if(isset($_GET['message']) && $_SESSION['logged']==1){
+	if(isset($_GET['message']) && $_SESSION['logged']==1 && isset($_SESSION['lastMsgID'])){
 		require_once 'db_connect.php';
 		$conn = new mysqli($dbServername, $dbUsername, $dbPassword, $dbName);
 		
