@@ -31,6 +31,7 @@ function getMessage() {
             //document.getElementById("demo").innerHTML =     
             var wartosc =
                 this.responseText;
+            console.log(wartosc)
         }
     };
     xhttp.open("GET", "send.php/?message=" + inputChat.value, true);
@@ -40,6 +41,7 @@ function getMessage() {
 btnChat.addEventListener('click', append)
 btnChat.addEventListener('click', send)
 
+
 //getM onclick html
 
 function append() {
@@ -47,6 +49,26 @@ function append() {
     messSpace.appendChild(div).style.color = 'red'
     div.classList.add('newdiv')
     div.innerHTML = inputChat.value
-    console.log(div)
+    // console.log(div)
+
+}
+let time = setInterval(recieveMessage, 1500)
+
+function recieveMessage() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+            var recieve = this.responseText;
+            if (recieve != 0) {
+                const div = document.createElement('div')
+                messSpace.appendChild(div)
+                div.innerHTML = recieve
+            }
+        }
+    };
+    xhttp.open("GET", "recieve.php/?message=1", true);
+    xhttp.send();
+
 
 }
