@@ -27,61 +27,6 @@
 		die();
 	}
 ?>
-<?php //wstawic do wypisania nicku rozmowcy
-	if($_SESSION['ID_CONV']!=0)echo $NickFriend;
-?>
-<?php //wstawic do wypisania statusu rozmowcy
-	if($_SESSION['ID_CONV']!=0)echo $OnlineStatus; // 1 -  Online, 0 - Offline
-?>
-<br /><br /><br />
-<?php //wstawic do wypisania kontaktow
-	$sql = 'SELECT participants.ID_Conversation FROM users 
-			INNER JOIN participants ON participants.ID_User=users.ID
-			WHERE participants.ID_User='.$_SESSION['ID_USER'];
-	$result = $conn->query($sql);
-	$amount = $result->num_rows;
-	
-	$sql = 'SELECT users.Nick, messages.Text, users.OnlineStatus, participants.ID_Conversation FROM users 
-			LEFT JOIN participants ON participants.ID_User=users.ID
-			LEFT JOIN messages ON participants.ID_Conversation=messages.ID_Conversation
-			WHERE ';
-			
-	if($result && $amount>0){
-		while($row = $result->fetch_assoc()){
-			$sql = $sql.'participants.ID_Conversation='.$row['ID_Conversation'].' OR ';
-		}
-		
-		$sql = substr($sql,0,-4).' ORDER BY messages.ID ASC LIMIT 1';
-		$result = $conn->query($sql);
-		$amount = $result->num_rows;
-		
-		if($result && $amount>0){
-			while($row = $result->fetch_assoc()){
-				echo '<a href="chat.php?c='.$row['ID_Conversation'].'">'.$row['Nick'].' '.$row['OnlineStatus'].' '.$row['Text'].'</a><br />';
-			}
-		}else echo 'Error';
-	}else echo 'Brak kontaktów';
-		
-?>
-<br /><br /><br />
-<?php //wstawic do wypisania wiadomosci
-	if($_SESSION['ID_CONV']!=0){
-		$sql = 'SELECT messages.Text, messages.TimeSend, users.Nick FROM messages 
-				INNER JOIN users ON messages.ID_Sender=users.ID
-				WHERE messages.ID_Conversation='.$_SESSION['ID_CONV'].'
-				ORDER BY messages.ID ASC LIMIT 50';
-		$result = $conn->query($sql);
-		$amount = @$result->num_rows;
-		$conn->close();
-		
-		if($result && $amount>0){
-			while($row = $result->fetch_assoc()){
-				echo $row['TimeSend'].' '.$row['Nick'].' '.$row['Text'].'<br />'; //Time, Nick, Message, I used space to separate values
-			}
-		}else echo 'Error';
-	}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -90,8 +35,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Mess.pl</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="mess.css">
 </head>
 
@@ -107,7 +51,36 @@
                 <i class="fas fa-search"></i>
             </div>
             <div class="one__list">
-                <div class="one__list--friend"></div> <!-- friend list -->
+                <div class="one__list--friend">
+				<?php //wstawic do wypisania kontaktow
+	$sql = 'SELECT participants.ID_Conversation FROM users 
+			INNER JOIN participants ON participants.ID_User=users.ID
+			WHERE participants.ID_User='.$_SESSION['ID_USER'];
+	$result = $conn->query($sql);
+	$amount = $result->num_rows;
+	
+	$sql = 'SELECT users.Nick, messages.Text, users.OnlineStatus, participants.ID_Conversation FROM users 
+			LEFT JOIN participants ON participants.ID_User=users.ID
+			LEFT JOIN messages ON participants.ID_Conversation=messages.ID_Conversation
+			WHERE users.ID!='.$_SESSION['ID_USER'].' AND ( ';
+			
+	if($result && $amount>0){
+		while($row = $result->fetch_assoc()){
+			$sql = $sql.'participants.ID_Conversation='.$row['ID_Conversation'].' OR ';
+		}
+		
+		$sql = substr($sql,0,-4).') ORDER BY messages.ID ASC LIMIT 1';
+		$result = $conn->query($sql);
+		$amount = $result->num_rows;
+		
+		if($result && $amount>0){
+			while($row = $result->fetch_assoc()){
+				echo '<a href="chat.php?c='.$row['ID_Conversation'].'">'.$row['Nick'].' '.$row['OnlineStatus'].' '.$row['Text'].'</a><br />';
+			}
+		}else echo 'Error';
+	}else echo 'Brak kontaktów';
+	?>
+				</div> <!-- friend list -->
             </div>
         </div>
         <!-- two -->
@@ -115,38 +88,42 @@
             <div class="two__top"></div>
             <div class="two__mid">
                 <div class="two__mid--status">
-                    <div class="user--name"><?php //wstawic do wypisania nicku rozmowcy
-	echo $NickFriend;
-?></div>
+                    <div class="user--name">
+					<?php //wstawic do wypisania nicku rozmowcy
+					if($_SESSION['ID_CONV']!=0)echo $NickFriend;
+					?>
+                    </div>
                     <div class="user--status">
 					<?php //wstawic do wypisania statusu rozmowcy
-	echo $OnlineStatus; // 1 -  Online, 0 - Offline
-?>
-					</div>
+	     			if($_SESSION['ID_CONV']!=0)echo $OnlineStatus; // 1 -  Online, 0 - Offline
+					?>
+                    </div>
 
                 </div>
                 <div class="two__mid--messages">
                     <div class="two__mid--messages--space">
 					<?php //wstawic do wypisania wiadomosci
-	$sql = 'SELECT messages.Text, messages.TimeSend, users.Nick FROM messages 
-			INNER JOIN users ON messages.ID_Sender=users.ID
-			WHERE messages.ID_Conversation='.$_SESSION['ID_CONV'].'
-			ORDER BY messages.ID DESC LIMIT 50';
-	$result = $conn->query($sql);
-	$amount = @$result->num_rows;
-	$conn->close();
-	
-	if($result && $amount>0){
-		while($row = $result->fetch_assoc()){
-			echo $row['TimeSend'].' '.$row['Nick'].' '.$row['Text'].'<br />'; //Time, Nick, Message, I used space to separate values
-		}
-	}else echo 'Error';
+	if($_SESSION['ID_CONV']!=0){
+		$sql = 'SELECT messages.Text, messages.TimeSend, users.Nick FROM messages 
+				INNER JOIN users ON messages.ID_Sender=users.ID
+				WHERE messages.ID_Conversation='.$_SESSION['ID_CONV'].'
+				ORDER BY messages.ID ASC';
+		$result = $conn->query($sql);
+		$amount = @$result->num_rows;
+		$conn->close();
+		
+		if($result && $amount>0){
+			while($row = $result->fetch_assoc()){
+				echo '<div>'.$row['TimeSend'].' '.$row['Nick'].' '.$row['Text'].'</div>'; //Time, Nick, Message, I used space to separate values
+			}
+		}else echo 'Error';
+	}
 ?>
-					</div>
+                    </div>
                 </div> <!-- messages -->
                 <div class="two__bot">
                     <input class="two__bot--write" type="text" placeholder="Write message ..."> <!-- write -->
-                    <button class="two__bot--send" onclick="getMessage();" >Send</button> <!-- send -->
+                    <button class="two__bot--send" onclick="getMessage();">Send</button> <!-- send -->
                 </div>
 
             </div>
@@ -164,7 +141,11 @@
         <div class="part white"></div>
         <div class="part black"></div>
 
-    </div>
+	</div>
+	
+	<div class="logout">
+		<a href="logout.php">log out</a>	
+		</div>
     <script src="main.js"></script>
 </body>
 

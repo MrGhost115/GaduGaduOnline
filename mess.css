@@ -110,6 +110,7 @@
      border-left: 1px solid #a7afb6;
      height: calc(100% - 50px);
      width: 100%;
+
  }
 
  .two__mid--status {
@@ -145,7 +146,7 @@
      width: 90%;
      height: 65%;
      background-color: #cbccd1;
-
+     overflow: auto;
  }
 
  .two__bot {
@@ -247,4 +248,21 @@
  .part:hover {
      transform: scale(1.1);
      border: none;
+ }
+
+ .newdiv {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     background-color: green;
+     z-index: 2;
+ }
+
+ .logout {
+     position: absolute;
+     top: 10px;
+     right: 100px;
+     color: red;
+     background-color: green;
  }
